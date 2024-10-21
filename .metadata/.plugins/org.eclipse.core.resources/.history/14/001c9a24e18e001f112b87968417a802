@@ -1,0 +1,5 @@
+package com.Admin.exceptions;
+
+public class ReceiptAlreadyExistException {
+
+}

@@ -1,0 +1,74 @@
+package com.customer.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+
+@Entity
+public class Ratings {
+
+	@Id
+	int id;
+
+	@NotBlank(message = "Detail cannot be left empty")
+	@Pattern(regexp = "[a-zA-z ]*", message = "Name should only contain Aplphabets")
+	String washerName;
+
+	String comments;
+
+	@Positive(message = "Id should be positive")
+	@Min(value = 1)
+	@Max(value = 5)
+	int Rating;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getWasherName() {
+		return washerName;
+	}
+
+	public void setWasherName(String washerName) {
+		this.washerName = washerName;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public int getRating() {
+		return Rating;
+	}
+
+	public void setRating(int rating) {
+		Rating = rating;
+	}
+
+	public Ratings() {
+
+	}
+
+	public Ratings(String id,
+			@NotBlank(message = "Detail cannot be left empty") @Pattern(regexp = "[a-zA-z ]*", message = "Name should only contain Aplphabets") String washerName,
+			String comments, @Positive(message = "Id should be positive") @Min(1) @Max(5) int rating) {
+		super();
+		this.id = id;
+		this.washerName = washerName;
+		this.comments = comments;
+		Rating = rating;
+	}
+
+}

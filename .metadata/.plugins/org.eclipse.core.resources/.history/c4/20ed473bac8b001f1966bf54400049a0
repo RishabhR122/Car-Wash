@@ -1,0 +1,56 @@
+package com.customer.contoller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.customer.model.CustomerDetails;
+import com.customer.service.CustomerService;
+
+@RestController
+@RequestMapping("/customer")
+public class CustomerController {
+
+	@Autowired
+	CustomerService customerService;
+
+	// get all details of customer
+	@GetMapping("/allCustomers")
+	public List<CustomerDetails> findAllCustomers() {
+		return customerService.findAllCustomers();
+	}
+
+	// get all details of customer by id
+	@GetMapping("/{id}")
+	public CustomerDetails findCustomersById(@PathVariable int id) {
+		return customerService.findCustomersById(id);
+	}
+	
+	// add details of a new customer 
+	@PostMapping("/add")
+	public String addCustomer(@RequestBody CustomerDetails customer) {
+		customerService.addCustomer(customer);
+		return "Customer Added Successfully";
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public String deleteCustomer(@PathVariable int id) {
+		customerService.deleteCustomer(id);
+		return "Customer Deleted Successfully"; 
+	}
+	
+	@PutMapping("/update")
+	public String updateCustomer(@RequestBody CustomerDetails customer) {
+		customerService.updateCustomer(customer);
+		return "Customer Details Updated Successfully";
+	}
+
+}

@@ -1,0 +1,73 @@
+package com.Admin.model;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
+public class Ratings {
+
+    @Id
+    private String id;  
+
+    private String washerName;
+    private String comments;
+    private int rating;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private WasherProfile washer;
+
+    // Default constructor
+    public Ratings() {}
+
+    // Constructor with parameters
+    public Ratings(String id, String washerName, String comments, int rating, WasherProfile washer) {
+    	this.id=id;
+        this.washerName = washerName;
+        this.comments = comments;
+        this.rating = rating;
+        this.washer = washer;
+    }
+
+    // Getters and Setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getWasherName() {
+        return washerName;
+    }
+
+    public void setWasherName(String washerName) {
+        this.washerName = washerName;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public WasherProfile getWasher() {
+        return washer;
+    }
+
+    public void setWasher(WasherProfile washer) {
+        this.washer = washer;
+    }
+}

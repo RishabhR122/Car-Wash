@@ -1,0 +1,85 @@
+package com.customer.testing;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import com.customer.contoller.CustomerController;
+import com.customer.model.CustomerDetails;
+import com.customer.service.CustomerService;
+
+import java.util.Optional;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+@WebMvcTest(CustomerController.class)
+public class CustomerDeleteApiTester {
+
+    private MockMvc mockMvc;
+
+    @MockBean
+    private CustomerService customerService;
+    
+    @InjectMocks
+    private CustomerController customerController;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        mockMvc = standaloneSetup(customerController).build();
+    }
+
+    @Test
+    public void testDeleteCustomer_Success() throws Exception {
+
+        // Mock the employee
+
+    	CustomerDetails customer = new CustomerDetails(1, "test1@gmail.com","First User", "6666666666");
+    	
+        when(customerService.findCustomersById(1)).thenReturn(Optional.of(customer).get());
+
+        // Perform DELETE request and validate response
+
+        mockMvc.perform(delete("/customer/delete/1")
+
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNoContent());
+
+        // Verify that deleteEmployee() was called with the correct ID
+
+        verify(customerService, times(1)).deleteCustomer(1);
+
+    }
+
+    @Test
+
+    public void testDeleteEmployee_NotFound() throws Exception {
+
+        // Mock the service to return an empty Optional when employee not found
+
+        when(employeeService.getEmployeeById(999)).thenReturn(Optional.empty());
+
+        // Perform DELETE request and validate response
+
+        mockMvc.perform(delete("/deleteEmployee/1")
+
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNotFound());
+
+        // Verify that deleteEmployee() was never called
+
+        verify(employeeService, never()).deleteEmployee(1);
+
+    }
+
+}

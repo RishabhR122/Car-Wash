@@ -1,0 +1,55 @@
+package com.Admin.service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.Admin.model.WashPacks;
+import com.Admin.repository.WashPackRepo;
+
+@Service
+public class WashPackServiceImpl implements WashPackService{
+	
+	@Autowired
+	WashPackRepo washPackRepo;
+	
+	//To add a WashPack
+    public WashPacks addWP(WashPacks washPacks){
+    	
+        return washPackRepo.save(washPacks);
+    }
+    //To find all wash packs
+    public List<WashPacks> findallWP(){
+        return washPackRepo.findAll();
+    }
+    //To find one WashPack
+    public ResponseEntity<WashPacks> findoneWP(String id){
+        Optional<WashPacks> wp=washPackRepo.findById(id);
+        return ResponseEntity.ok(wp.get());
+    }
+    
+    public WashPacks findbyname(String name){
+        return washPackRepo.findAll().stream().filter(x -> x.getName().contains(name)).findFirst().get();
+    }
+    //To delete a WashPack
+    public ResponseEntity<Map<String,Boolean>> deleteWP(String id){
+        Optional<WashPacks> wp=washPackRepo.findById(id);
+        washPackRepo.deleteById(id);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("Washpack Deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
+    }
+    //To update a WashPack
+    public ResponseEntity<WashPacks> updateWP(String id,WashPacks washPacks) {
+        Optional<WashPacks> existingWashPack = washPackRepo.findById(id);
+        //ID won't be updated ever
+        WashPacks response=washPackRepo.save(existingWashPack.get());
+        return ResponseEntity.ok(response);
+    }
+
+}

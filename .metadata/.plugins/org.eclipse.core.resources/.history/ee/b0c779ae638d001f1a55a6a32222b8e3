@@ -1,0 +1,16 @@
+package com.Admin.service;
+
+import java.util.List;
+
+import com.Admin.model.Ratings;
+
+
+
+public interface RatingService {
+	
+	 public List<Ratings> getallRatings();
+	 public void addRating(Ratings ratings);
+	 public List<Ratings> washerSpecific(String washerName);
+	 public void deleteRating(String id);
+
+}

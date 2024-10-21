@@ -1,0 +1,62 @@
+package com.Admin.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.Admin.model.WashPacks;
+import com.Admin.service.WashPackService;
+
+@RestController
+@RequestMapping("/admin")
+public class WashPackController {
+	
+	@Autowired
+	WashPackService washPackService;
+
+	@GetMapping("/all/findWP")
+	public List<WashPacks> findallWP() {
+		return washPackService.findallWP();
+	}
+
+	// To find one WashPack with ID
+//	@GetMapping("/all/findWP/{id}")
+//	public ResponseEntity<WashPacks> findoneWP(@PathVariable String id) {
+//		return washPackService.findoneWP(id);
+//	}
+
+	// To add a new WashPack
+	@PostMapping("/addWP")
+	public WashPacks addWP(@RequestBody WashPacks washPacks) {
+		return washPackService.addWP(washPacks);
+	}
+
+	// To delete a Washpack
+	@DeleteMapping("/deleteWP/{id}")
+	public ResponseEntity<Map<String, Boolean>> deleteWP(@PathVariable String id) {
+		return washPackService.deleteWP(id);
+	}
+
+	// To update a Wash pack
+	@PutMapping("/updateWP/{id}")
+	public ResponseEntity<WashPacks> updateWP(@PathVariable String id, @RequestBody WashPacks washPacks) {
+		return washPackService.updateWP(id, washPacks);
+	}
+
+	// To find wash pack with wash pack name
+	@GetMapping("/all/findWP/name/{name}")
+	public WashPacks wpbyname(@PathVariable String name) {
+		return washPackService.findbyname(name);
+	}
+
+}

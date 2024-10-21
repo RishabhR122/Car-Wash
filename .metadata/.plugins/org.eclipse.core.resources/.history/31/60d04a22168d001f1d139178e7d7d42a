@@ -1,0 +1,91 @@
+package com.Admin.service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.Admin.exceptions.NoSuchAdminExistException;
+import com.Admin.model.Admin;
+import com.Admin.model.CustomerDetails;
+import com.Admin.model.Ratings;
+import com.Admin.repository.AdminRepo;
+import com.customer.exception.CustomerAlreadyExistException;
+import com.customer.exception.CustomerDoNotExistException;
+
+@Service
+public class AdminService {
+
+	@Autowired
+	RestTemplate restTemplate;
+
+	@Autowired
+	AdminRepo adminRepo;
+
+	static final String url = "http://localhost:8080/customer";
+
+	public List<CustomerDetails> getAllCustomers() {
+
+		CustomerDetails[] customers = restTemplate.getForObject(url + "/all", CustomerDetails[].class);
+		return Arrays.asList(customers);
+
+	}
+
+	public CustomerDetails getCustomerById(String id) {
+		CustomerDetails customers = restTemplate.getForObject(url + "/" + id, CustomerDetails.class);
+		return customers;
+
+	}
+
+	public List<Ratings> getSpecificWasherRating(String washerName) {
+		Ratings[] ratings = restTemplate.getForObject(url + "/washerSpecificRating/" + washerName, Ratings[].class);
+		return Arrays.asList(ratings);
+	}
+
+	public List<Admin> getAllAdmins() {
+
+		return adminRepo.findAll();
+
+	}
+	
+	
+	public Admin findAdminById(String id) {
+		Optional<Admin> op = adminRepo.findById(id);
+		if (op.isEmpty()) {
+			throw new NoSuchAdminExistException("No admin of id:" + id + " exists");
+		}
+		return op.get();
+	}
+
+	public void addAdmin(Admin admin) {
+		Optional<Admin> op = adminRepo.findById(admin.getId());
+		if (!op.isEmpty()) {
+			throw new CustomerAlreadyExistException("Customer of id:" + customer.getId() + " already exists");
+		} else {
+			customerRepo.save(customer);
+		}
+
+	}
+
+	public void deleteCustomer(String id) {
+		Optional<CustomerDetails> op = customerRepo.findById(id);
+		if (op.isEmpty()) {
+			throw new CustomerDoNotExistException("Customer not found");
+		} else {
+			customerRepo.deleteById(id);
+		}
+	}
+
+	public void updateCustomer(CustomerDetails customer) {
+		Optional<CustomerDetails> op = customerRepo.findById(customer.getId());
+		if (op.isEmpty()) {
+			throw new CustomerDoNotExistException("No customer of id:" + customer.getId() + " exists");
+		} else {
+			customerRepo.save(customer);
+		}
+
+	}
+}

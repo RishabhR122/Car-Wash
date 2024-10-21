@@ -1,0 +1,30 @@
+package com.customer.contoller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.customer.model.CustomerDetails;
+import com.customer.service.CustomerService;
+
+@RestController
+@RequestMapping("/customer")
+public class CustomerController {
+	
+	@Autowired
+	CustomerService service;
+	
+	
+	@GetMapping("/home")
+	public String home() {
+		return "Hi ////";
+	}
+	
+	@GetMapping("/allCustomers")
+	public List<CustomerDetails> customers() {
+		return service.findAllCustomers();
+	}
+}

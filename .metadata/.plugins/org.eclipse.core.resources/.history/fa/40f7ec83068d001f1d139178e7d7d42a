@@ -1,0 +1,17 @@
+package com.Admin.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class AdminService {
+	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	static final String url="http://localhost:8080/customer";
+	
+	
+
+}

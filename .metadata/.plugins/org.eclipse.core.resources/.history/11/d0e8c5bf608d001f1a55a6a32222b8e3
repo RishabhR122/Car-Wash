@@ -1,0 +1,14 @@
+package com.customer.service;
+
+import java.util.List;
+
+import com.customer.model.Ratings;
+
+public interface RatingService {
+	
+	 public List<Ratings> getallRatings();
+	 public void addRating(Ratings ratings);
+	 public List<Ratings> washerSpecific(String washerName);
+	 public void deleteRating(String id);
+
+}

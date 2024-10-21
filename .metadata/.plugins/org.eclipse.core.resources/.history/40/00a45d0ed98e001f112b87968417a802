@@ -1,0 +1,36 @@
+package com.example.paymentservice.controller;
+
+import com.example.paymentservice.entity.Transaction;
+import com.example.paymentservice.service.PaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/payments")
+public class PaymentController {
+
+    @Autowired
+    private PaymentService paymentService;
+
+    @PostMapping("/create")
+    public ResponseEntity<Transaction> createTransaction() {
+        Transaction transaction = paymentService.createTransaction(500);
+        if (transaction != null) {
+            return ResponseEntity.ok(transaction);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
+    @GetMapping("/success/{id}")
+    public String sendSuccesConfirmation(@PathVariable String id) {
+    	
+    	return paymentService.paymentSuccess(id);
+    }
+    @GetMapping("/getAmount/{id}")
+    public int getTransactionAmount(@PathVariable String id) {
+    	
+    	return paymentService.getTransactionAmount(id);
+    }
+}

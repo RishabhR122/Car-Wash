@@ -1,0 +1,106 @@
+package com.Admin.service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
+
+import com.Admin.exceptions.AdminAlreadyExistException;
+import com.Admin.exceptions.CustomerDoNotExistException;
+import com.Admin.exceptions.NoSuchAdminExistException;
+import com.Admin.model.Admin;
+import com.Admin.model.CustomerDetails;
+import com.Admin.model.Ratings;
+import com.Admin.model.WasherProfile;
+import com.Admin.repository.AdminRepo;
+import com.Admin.repository.WasherRepo;
+
+
+@Service
+public class AdminServiceImpl implements AdminService{
+
+	@Autowired
+	RestTemplate restTemplate;
+
+	@Autowired
+	AdminRepo adminRepo;
+	
+	@Autowired
+	WasherRepo washerRepo;
+
+	static final String url = "http://localhost:8080/customer";
+
+	public List<CustomerDetails> getAllCustomers() {
+
+		CustomerDetails[] customers = restTemplate.getForObject(url + "/all", CustomerDetails[].class);
+		return Arrays.asList(customers);
+
+	}
+
+	public CustomerDetails getCustomerById(String id) {
+		CustomerDetails customers = restTemplate.getForObject(url + "/" + id, CustomerDetails.class);
+		return customers;
+
+	}
+
+
+	public List<Admin> getAllAdmins() {
+
+		return adminRepo.findAll();
+
+	}
+	
+	
+	public Admin findAdminById(String id) {
+		Optional<Admin> op = adminRepo.findById(id);
+		if (op.isEmpty()) {
+			throw new NoSuchAdminExistException("No admin of id:" + id + " exists");
+		}
+		return op.get();
+	}
+
+	public void addAdmin(Admin admin) {
+		Optional<Admin> op = adminRepo.findById(admin.getId());
+		if (!op.isEmpty()) {
+			throw new AdminAlreadyExistException("Admin of id:" + admin.getId() + " already exists");
+		} else {
+			adminRepo.save(admin);
+		}
+
+	}
+
+	public void deleteAdmin(String id) {
+		Optional<Admin> op = adminRepo.findById(id);
+		if (op.isEmpty()) {
+			throw new NoSuchAdminExistException("Admin not found");
+		} else {
+			adminRepo.deleteById(id);
+		}
+	}
+
+	public void updateAdmin(Admin admin) {
+		Optional<Admin> op = adminRepo.findById(admin.getId());
+		if (op.isEmpty()) {
+			throw new NoSuchAdminExistException("No admin of id:" + admin.getId() + " exists");
+		} else {
+			adminRepo.save(admin);
+		}
+
+	}
+	
+	public void updateExistingCustomer(@RequestBody CustomerDetails customer) {
+		
+		CustomerDetails cust = restTemplate.getForObject(url+"/"+customer.getId(),CustomerDetails.class);
+		if(cust!=null) {
+			restTemplate.put(url+"/update", customer);
+		}
+		else {
+			throw new CustomerDoNotExistException("No such customer");
+		}
+		
+	}
+}

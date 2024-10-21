@@ -1,0 +1,165 @@
+package com.customer.testing;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+import com.customer.contoller.CustomerController;
+import com.customer.exception.CustomerDoNotExistException;
+import com.customer.model.CustomerDetails;
+import com.customer.repository.CustomerRepo;
+import com.customer.service.CustomerService;
+import static org.mockito.Mockito.verify;
+
+
+import jakarta.ws.rs.core.MediaType;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
+
+@WebMvcTest(CustomerController.class)
+class CustomerTester {
+	
+	 private MockMvc mockMvc;
+	 
+    @MockBean
+    private CustomerService customerService;
+    
+    @Mock
+    CustomerRepo customerRepo;
+
+
+    @InjectMocks
+    private CustomerController customerController;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        
+        mockMvc = standaloneSetup(customerController).build();
+
+    }
+
+    @Test
+
+    public void testFindAllCustomers() throws Exception {
+
+        // Mock data
+
+    	CustomerDetails customer1 = new CustomerDetails(1, "test1@gmail.com","First User", "6666666666");
+
+    	CustomerDetails customer2 = new CustomerDetails(2, "test2@gmail.com","Second User", "7777777777");
+    	CustomerDetails customer3 = new CustomerDetails(3, "test3@gmail.com","Third User", "8888888888");
+
+        List<CustomerDetails> mockCustomers = Arrays.asList(customer1, customer2, customer3);
+
+        // Mock the service call
+
+        when(customerService.findAllCustomers()).thenReturn(mockCustomers);
+
+        // Perform the GET request and validate the response
+
+        mockMvc.perform(get("/customer/all"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(3))
+                .andExpect(jsonPath("$[0].name").value("First User"))
+                .andExpect(jsonPath("$[1].name").value("Second User"))
+                .andExpect(jsonPath("$[2].name").value("Third User"));
+
+    }
+
+    @Test
+
+    public void testGetCustomerById_Success() throws Exception {
+
+        // Mock data
+
+    	CustomerDetails customer1 = new CustomerDetails(1, "test1@gmail.com","First User", "6666666666");
+
+        when(customerService.findCustomersById(1)).thenReturn(Optional.of(customer1).get());
+
+        // Perform GET request and validate response
+
+        mockMvc.perform(get("/customer/1")
+
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.id").value(1))
+
+                .andExpect(jsonPath("$.name").value("First User"))
+
+                .andExpect(jsonPath("$.phoneNumber").value("6666666666"));
+
+    }
+    
+    @Test
+    void testDeleteCustomer_Success() {
+    	CustomerDetails customer= new CustomerDetails(1, "test1@gmail.com","First User", "6666666666");
+        // Mock repository response for customer find
+        when(customerRepo.findById(1)).thenReturn(Optional.of(customer));
+
+        // Call the service method
+        customerService.deleteCustomer(1);
+
+        // Verify that the repository deleteById method was called
+        verify(customerRepo, times(1)).deleteById(1);
+    }
+    
+ // Test case for updating a customer
+    @Test
+    void testUpdateCustomer_Success() {
+    	CustomerDetails customer = new CustomerDetails(1, "test1@gmail.com","First User", "6666666666");
+        // Mock repository response for customer find
+        when(customerRepo.findById(1)).thenReturn(Optional.of(customer));
+
+        // Call the service method
+        customerService.updateCustomer(customer);
+
+       // Verify that the repository save method was called
+        verify(customerRepo, times(1)).save(customer);
+    }
+
+//    @Test
+//    void testDeleteCustomer_CustomerNotFound() {
+//        // Mock repository response when customer is not found
+//        when(customerRepo.findById(9)).thenReturn(Optional.empty());
+//
+//        // Assert that the exception is thrown when trying to delete a non-existing customer
+//        assertThrows(CustomerDoNotExistException.class, () -> customerService.deleteCustomer(9));
+//
+//        // Verify that the deleteById method was never called
+//        verify(customerRepo, never()).deleteById(anyInt());
+//    }
+
+
+    
+
+//    @Test
+//    void testUpdateCustomer_CustomerNotFound() {
+//    	CustomerDetails customer = new CustomerDetails(9, "test1@gmail.com","Firstt User", "6666666666");
+//        // Mock repository response when customer is not found
+//        when(customerRepo.findById(1)).thenReturn(Optional.empty());
+//
+//        // Assert that the exception is thrown when trying to update a non-existing customer
+//        assertThrows(CustomerDoNotExistException.class, () -> customerService.updateCustomer(customer));
+//
+////        // Verify that the save method was never called
+////        verify(customerRepo, never()).save(any(CustomerDetails.class));
+//    }
+}

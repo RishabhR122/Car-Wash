@@ -1,0 +1,34 @@
+package com.customer.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.customer.model.Ratings;
+import com.customer.repository.RatingRepo;
+
+public class RatingService {
+	
+	@Autowired
+    RatingRepo ratingrepo;
+
+    //To get all the ratings
+    public List<Ratings> getallRatings(){
+        return ratingrepo.findAll();
+    }
+    
+    public Ratings addRating(Ratings ratings){
+        return ratingrepo.save(ratings);
+    }
+    //To get ratings of specific washer
+    public List<Ratings> washerSpecific(String washerName){
+        List<Ratings> washerSpecificRatings=ratingrepo.findAll().stream().filter(x -> x.getWasherName().equals(washerName)).toList();
+        return washerSpecificRatings;
+    }
+    //To delete a rating
+    public void deleteRating(int id){
+        ratingrepo.deleteById(id);
+        
+    }
+
+}

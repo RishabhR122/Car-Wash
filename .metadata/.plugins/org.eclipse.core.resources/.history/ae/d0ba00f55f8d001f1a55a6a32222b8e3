@@ -1,0 +1,5 @@
+package com.Admin.repository;
+
+public interface RatingRepo {
+
+}

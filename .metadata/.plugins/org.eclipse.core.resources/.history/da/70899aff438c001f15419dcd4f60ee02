@@ -1,0 +1,10 @@
+package com.customer.testing;
+
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+
+@Suite
+@SelectClasses({ CustomerDeleteApiTester.class, CustomerGetApiTester.class })
+public class GlobalTester {
+	
+}

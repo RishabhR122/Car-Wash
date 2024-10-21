@@ -1,0 +1,4 @@
+spring.application.name=ApiGateway
+eureka.client.service-url.default-zone=http://localhost:8761/eureka/
+spring.security.user.name=rish
+spring.security.user.password=1234

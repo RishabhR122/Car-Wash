@@ -1,0 +1,16 @@
+package com.Admin.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.Admin.model.Ratings;
+import com.Admin.model.WasherProfile;
+
+@Repository
+public interface RatingRepo extends JpaRepository<Ratings, String>{
+	
+	Optional<WasherProfile> findByFullName(String fullName);
+
+}

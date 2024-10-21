@@ -1,0 +1,14 @@
+package com.customer.service;
+
+import java.util.List;
+
+import com.customer.model.OrderDetails;
+import com.customer.model.WashPacks;
+
+public interface OrderService {
+	
+	public List<WashPacks> getAllWP();
+	public WashPacks getWPByID(String id);
+	public void placeOrder(OrderDetails order);
+
+}

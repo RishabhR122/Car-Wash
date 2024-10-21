@@ -1,0 +1,17 @@
+package com.Admin.repository;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.Admin.model.WasherProfile;
+
+@Repository
+public interface WasherRepo extends JpaRepository<WasherProfile, String>{
+	
+	 @Query("SELECT w FROM WasherProfile w JOIN FETCH w.ratingList WHERE w.fullName = :fullName")
+	Optional<WasherProfile> findByFullName(String fullName);
+
+}

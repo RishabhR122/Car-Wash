@@ -1,0 +1,16 @@
+package com.customer.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.customer.repository.CustomerRepo;
+
+public class CustomerService {
+	
+	@Autowired
+	CustomerRepo customerRepo;
+	
+	public void home(){
+		
+	}
+	
+}

@@ -1,0 +1,18 @@
+package com.customer.service;
+
+import java.util.List;
+
+
+import com.customer.model.CustomerDetails;
+import com.customer.model.Ratings;
+import com.customer.model.Receipt;
+
+public interface CustomerService {
+	public List<CustomerDetails> findAllCustomers();
+	public CustomerDetails findCustomersById(String id);
+	public void addCustomer(CustomerDetails customer);
+	public void deleteCustomer(String id);
+	public void updateCustomer(CustomerDetails customer);
+	public Receipt getReceiptbyId(int receiptId);
+	public List<Ratings> getSpecificWasherRating(String washerName);
+}

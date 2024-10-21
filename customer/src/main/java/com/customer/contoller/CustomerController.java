@@ -1,0 +1,115 @@
+package com.customer.contoller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.customer.model.CustomerDetails;
+import com.customer.model.OrderDetails;
+import com.customer.model.Ratings;
+import com.customer.model.Receipt;
+import com.customer.model.WashPacks;
+import com.customer.service.CustomerService;
+import com.customer.service.OrderService;
+
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/customer")
+@Validated
+public class CustomerController {
+
+	@Autowired
+	CustomerService customerService;
+	
+	@Autowired
+	OrderService orderService;
+	
+	// get all details of customer
+	@GetMapping("/all")
+	public List<CustomerDetails> findAllCustomers() {
+		return customerService.findAllCustomers();
+	}
+	
+	// get all details of customer by id
+	@GetMapping("/{id}")
+	public CustomerDetails findCustomersById(@PathVariable String id) {
+		return customerService.findCustomersById(id);
+	}
+	
+	// add details of a new customer 
+	@PostMapping("/add")
+	public String addCustomer(@Valid @RequestBody CustomerDetails customer) {
+		customerService.addCustomer(customer);
+		return "Customer Added Successfully";
+	}
+	
+	// delete details of customer 
+	@DeleteMapping("/delete/{id}")
+	public void deleteCustomer(@PathVariable String id) {
+		customerService.deleteCustomer(id);
+    }
+	// update details of a existing customer 
+	@PutMapping("/update")
+	public String updateCustomer(@Valid @RequestBody CustomerDetails customer) {
+		customerService.updateCustomer(customer);
+		return "Customer Details Updated Successfully";
+	}
+	   
+	@GetMapping("/seeWp")
+	public List<WashPacks> getAllWP() {
+        return orderService.getAllWP();
+    }
+	
+	@GetMapping("/seeWp/{id}")
+	public WashPacks getWPByID(@PathVariable String id) {
+		return orderService.getWPByID(id);
+	}
+	
+	@PostMapping("/addOrder")
+	public String addOrder(@RequestBody OrderDetails order) {
+		orderService.placeOrder(order);
+		return "Order Added Successfully";
+		
+	}
+	
+	@GetMapping("/getReceipt/{receiptId}")
+	public Receipt getReceiptbyId(@PathVariable int receiptId) {
+
+		return customerService.getReceiptbyId(receiptId);
+	}
+	
+	@GetMapping("/washerSpecificRating/{washerName}")
+	public List<Ratings> washerSpecificRatingByWasherName(@PathVariable String washerName) {
+		return customerService.getSpecificWasherRating(washerName);
+	}
+	
+	@GetMapping("findMyOrder/{customerName}")
+	public List<OrderDetails> allOrdersBySpecificUser(@PathVariable String customerName){
+		return orderService.seeMyOrders(customerName);
+	}
+	
+	@PostMapping("/addRating/{email}")
+	public String addRatingToWasher(@PathVariable String email, @RequestBody Ratings rating) {
+		orderService.addRatingToWasher(email, rating);
+		return "Rating added successfully";
+	}
+	
+	@PutMapping("/cancelOrder")
+	public String cancelOrder(@RequestBody OrderDetails data) {
+		orderService.cancelOrder(data);
+		return "The order with ID - "+data.getOrderId()+" is cancelled Successfully.";
+	}
+	
+	
+
+}

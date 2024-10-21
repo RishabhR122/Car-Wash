@@ -1,0 +1,37 @@
+package com.Admin.service;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.Admin.model.CustomerDetails;
+import com.customer.model.Ratings;
+
+@Service
+public class AdminService {
+	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	static final String url="http://localhost:8080/customer";
+	
+	
+	public List<CustomerDetails> getAllCustomers(){
+		
+		CustomerDetails[] customers=restTemplate.getForObject(url+"/all", CustomerDetails[].class);
+		return Arrays.asList(customers);
+		
+	}
+
+
+	public CustomerDetails getCustomerById(String id) {
+		CustomerDetails customers=restTemplate.getForObject(url+"/"+id, CustomerDetails.class);
+		return customers;
+	
+	}
+	
+	
+}

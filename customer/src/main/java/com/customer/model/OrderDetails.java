@@ -1,0 +1,120 @@
+package com.customer.model;
+
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+public class OrderDetails {
+
+	
+	private String orderId;
+	@NotEmpty(message = "Washer Name Can't be empty")
+	private String userName;
+	@NotEmpty(message = "Email Can't be empty")
+	private String userEmailId;
+	@NotNull(message = "Date can't be empty")
+	private long userPhoneNo;
+	@NotEmpty(message = "Pincode can't be empty")
+	private String areaPinCode;
+	private String washerName;
+	@NotEmpty(message = "Wash pack can't be empty")
+	private String washerPack;
+	private String status;
+
+	@NotEmpty(message = "car field can't be empty")
+	Car cars;
+
+	public OrderDetails() {
+
+	}
+
+	public OrderDetails(String orderId, @NotEmpty(message = "Washer Name Can't be empty") String userName,
+			@NotEmpty(message = "Email Can't be empty") String userEmailId,
+			@NotEmpty(message = "Date can't be empty") long userPhoneNo,
+			@NotEmpty(message = "Pincode can't be empty") String areaPinCode, String washerName,
+			@NotEmpty(message = "Wash pack can't be empty") String washerPack, String status,
+			@NotEmpty(message = "car field can't be empty") Car cars) {
+		super();
+		this.orderId = orderId;
+		this.userName = userName;
+		this.userEmailId = userEmailId;
+		this.userPhoneNo = userPhoneNo;
+		this.areaPinCode = areaPinCode;
+		this.washerName = washerName;
+		this.washerPack = washerPack;
+		this.status = status;
+		this.cars = cars;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getUserEmailId() {
+		return userEmailId;
+	}
+
+	public void setUserEmailId(String userEmailId) {
+		this.userEmailId = userEmailId;
+	}
+
+	public long getUserPhoneNo() {
+		return userPhoneNo;
+	}
+
+	public void setUserPhoneNo(long userPhoneNo) {
+		this.userPhoneNo = userPhoneNo;
+	}
+
+	public String getAreaPinCode() {
+		return areaPinCode;
+	}
+
+	public void setAreaPinCode(String areaPinCode) {
+		this.areaPinCode = areaPinCode;
+	}
+
+	public String getWasherName() {
+		return washerName;
+	}
+
+	public void setWasherName(String washerName) {
+		this.washerName = washerName;
+	}
+
+	public String getWasherPack() {
+		return washerPack;
+	}
+
+	public void setWasherPack(String washerPack) {
+		this.washerPack = washerPack;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Car getCars() {
+		return cars;
+	}
+
+	public void setCars(Car cars) {
+		this.cars = cars;
+	}
+
+}

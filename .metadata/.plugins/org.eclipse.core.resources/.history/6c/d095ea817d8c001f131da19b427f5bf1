@@ -1,0 +1,26 @@
+package com.customer.service;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.customer.model.WashPacks;
+
+@Service
+public class OrderServiceImpl {
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	 String url1="http://localhost:1111/admin";
+	 
+	//To see all the WashPacks
+	    public List<WashPacks> getAllWP(){
+	        WashPacks[] wp=restTemplate.getForObject(url1+"/all/findWP",WashPacks[].class);
+	        return (Arrays.asList(wp));
+	    }
+
+}

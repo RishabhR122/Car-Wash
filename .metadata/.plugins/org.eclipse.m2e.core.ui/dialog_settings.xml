@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="MavenProjectImportWizardPage">
+		<list key="rootDirectory">
+			<item value="C:\Users\RROCHLAN\Desktop\On Demand Car Wash\CarWasher"/>
+			<item value="C:\Users\RROCHLAN\Desktop\On Demand Car Wash\payment"/>
+			<item value="C:\Users\RROCHLAN\Desktop\On Demand Car Wash\Cart"/>
+			<item value="C:\Users\RROCHLAN\Downloads\orders\order"/>
+			<item value="C:\Users\RROCHLAN\Desktop\On Demand Car Wash\Admin"/>
+			<item value="C:\Users\RROCHLAN\Desktop\On Demand Car Wash\EurekaServer"/>
+			<item value="C:\Users\RROCHLAN\Desktop\On Demand Car Wash\ApiGateway"/>
+			<item value="C:\Users\RROCHLAN\Desktop\On Demand Car Wash\customer"/>
+			<item value="C:\Users\RROCHLAN\Desktop\On Demand Car Wash\Customer"/>
+		</list>
+		<list key="projectNameTemplate">
+			<item value="[artifactId]"/>
+			<item value="[artifactId]-TRUNK"/>
+			<item value="[artifactId]-[version]"/>
+			<item value="[groupId].[artifactId]"/>
+			<item value="[groupId].[artifactId]-[version]"/>
+			<item value="[name]"/>
+		</list>
+	</section>
+	<section name="org.eclipse.m2e.core.pom.overview">
+	</section>
+	<section name="org.eclipse.m2e.core.pom.dependencies">
+	</section>
+</section>

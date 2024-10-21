@@ -1,0 +1,84 @@
+package com.customer.testing;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class CustomerTester {
+	
+	 private MockMvc mockMvc;
+    @MockBean
+
+    private MyServ employeeService;
+
+    @InjectMocks
+
+    private MyControler employeeController;
+
+    @BeforeEach
+
+    public void setUp() {
+
+        MockitoAnnotations.openMocks(this);
+
+        mockMvc = standaloneSetup(employeeController).build();
+
+    }
+
+    @Test
+
+    public void testGetAllEmployees() throws Exception {
+
+        // Mock data
+
+        Employee employee1 = new Employee(1, "Suresh",30,5000, "Developer");
+
+        Employee employee2 = new Employee(2, "Thanesh",30,50000, "Manager");
+
+        List<Employee> mockEmployees = Arrays.asList(employee1, employee2);
+
+        // Mock the service call
+
+        when(employeeService.AllmyEmployees()).thenReturn(mockEmployees);
+
+        // Perform the GET request and validate the response
+
+        mockMvc.perform(get("/all"))
+
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.length()").value(2))
+
+                .andExpect(jsonPath("$[0].name").value("Suresh"))
+
+                .andExpect(jsonPath("$[1].name").value("Thanesh"));
+
+    }
+
+    @Test
+
+    public void testGetEmployeeById_Success() throws Exception {
+
+        // Mock data
+
+        Employee employee = new Employee(1, "Suresh",30,5000, "Developer");
+
+        when(employeeService.getEmployeeById(1)).thenReturn(Optional.of(employee));
+
+        // Perform GET request and validate response
+
+        mockMvc.perform(get("/employee/1")
+
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$.id").value(1))
+
+                .andExpect(jsonPath("$.name").value("Suresh"))
+
+                .andExpect(jsonPath("$.desig").value("Developer"));
+
+    }
+
+}

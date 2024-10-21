@@ -1,0 +1,15 @@
+spring:
+  cloud:
+   gateway:
+     routes:
+      
+        - id: customer
+          uri: http://localhost:8082
+          predicates:
+            - Path=/customer/**
+        
+  application:
+          name: APIGateWay
+                   
+server:
+   port: 8080

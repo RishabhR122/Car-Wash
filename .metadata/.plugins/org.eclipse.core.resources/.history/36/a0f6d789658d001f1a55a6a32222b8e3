@@ -1,0 +1,64 @@
+package com.Admin.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.Admin.exceptions.AdminAlreadyExistException;
+import com.Admin.exceptions.NoSuchAdminExistException;
+import com.Admin.exceptions.NoSuchWasherException;
+import com.Admin.model.Admin;
+import com.Admin.model.WasherProfile;
+import com.Admin.repository.WasherRepo;
+
+public class WasherServiceImpl {
+	
+	@Autowired
+	WasherRepo washerRepo;
+	
+	public List<WasherProfile> getAllWasher() {
+
+		return washerRepo.findAll();
+
+	}
+	
+	
+	public WasherProfile findWasherById(String email) {
+		Optional<WasherProfile> op = washerRepo.findById(email);
+		if (op.isEmpty()) {
+			throw new NoSuchWasherException("No washer of id:" + email + " exists");
+		}
+		return op.get();
+	}
+
+	public void addWasher(WasherProfile washer) {
+		Optional<WasherProfile> op = washerRepo.findById(washer.getEmail());
+		if (!op.isEmpty()) {
+			throw new WasherAlreadyExistException("Admin of id:" + washer.getEmail() + " already exists");
+		} else {
+			washerRepo.save(washer);
+		}
+
+	}
+
+	public void deleteAdmin(String id) {
+		Optional<Admin> op = adminRepo.findById(id);
+		if (op.isEmpty()) {
+			throw new NoSuchAdminExistException("Admin not found");
+		} else {
+			adminRepo.deleteById(id);
+		}
+	}
+
+	public void updateAdmin(Admin admin) {
+		Optional<Admin> op = adminRepo.findById(admin.getId());
+		if (op.isEmpty()) {
+			throw new NoSuchAdminExistException("No admin of id:" + admin.getId() + " exists");
+		} else {
+			adminRepo.save(admin);
+		}
+
+	}
+
+}

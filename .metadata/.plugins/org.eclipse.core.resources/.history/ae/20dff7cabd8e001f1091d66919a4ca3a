@@ -1,0 +1,47 @@
+package com.Admin.model;
+
+import jakarta.annotation.Generated;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
+public class Receipt {
+	
+	@Id
+	@Generat()
+	private int receiptId;
+	private int amount;
+	String washPackName;
+	
+	public Receipt() {}
+	
+	
+	public Receipt(String receiptId, int amount, String washPackName) {
+		super();
+		this.receiptId = receiptId;
+		this.amount = amount;
+		this.washPackName = washPackName;
+	}
+
+
+	public String getReceiptId() {
+		return receiptId;
+	}
+	public void setReceiptId(String receiptId) {
+		this.receiptId = receiptId;
+	}
+	public int getAmount() {
+		return amount;
+	}
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+	public String getWashPackName() {
+		return washPackName;
+	}
+	public void setWashPackName(String washPackName) {
+		this.washPackName = washPackName;
+	}
+	
+
+}

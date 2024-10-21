@@ -1,0 +1,54 @@
+package com.Admin.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.Admin.exceptions.NoSuchWasherException;
+import com.Admin.model.Ratings;
+import com.Admin.model.WasherProfile;
+import com.Admin.repository.RatingRepo;
+import com.Admin.repository.WasherRepo;
+
+@Service
+public class RatingServiceImpl implements RatingService {
+
+	@Autowired
+	RatingRepo ratingRepo;
+	
+	@Autowired
+	WasherRepo washerRepo;
+
+	// To get all the ratings
+	public List<Ratings> getallRatings() {
+		return ratingRepo.findAll();
+	}
+
+	public void addRating(Ratings ratings) {
+		ratingRepo.save(ratings);
+	}
+
+	public List<Ratings> getSpecificWasherRating(String washerName) {
+
+		 Optional<WasherProfile> washer = washerRepo.findByFullName(washerName);
+	        if (washer.isPresent()) {
+	            return washer.get().getRatingList();
+	        } else {
+	            return new ArrayList<>();
+	        }
+	    }
+	}
+
+	// To delete a rating
+	public void deleteRating(String id) {
+		Optional<Ratings> op = ratingRepo.findById(id);
+		if (op.isEmpty()) {
+			throw new NoSuchWasherException("No such washer exists");
+		}
+		ratingRepo.deleteById(id);
+	}
+
+}

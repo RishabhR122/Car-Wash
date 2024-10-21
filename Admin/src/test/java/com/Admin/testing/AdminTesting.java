@@ -1,0 +1,197 @@
+package com.Admin.testing;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.Admin.controller.AdminController;
+import com.Admin.model.Admin;
+import com.Admin.model.CustomerDetails;
+import com.Admin.model.Receipt;
+import com.Admin.service.AdminService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class AdminTesting {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Mock
+    private AdminService adminService;
+
+    @InjectMocks
+    private AdminController adminController;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(adminController).build();
+    }
+
+    @Test
+    public void testGetAllCustomer() throws Exception {
+        List<CustomerDetails> customerList = Arrays.asList(
+            new CustomerDetails("1", "test@gmail.com", "First Tester", "8888888888"), 
+            new CustomerDetails("2", "test2@gmail.com", "Second Tester", "9999999999")
+        );
+        when(adminService.getAllCustomers()).thenReturn(customerList);
+
+        mockMvc.perform(get("/admin/seeAllCustomers"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(customerList)));
+
+        verify(adminService, times(1)).getAllCustomers();
+    }
+
+    @Test
+    public void testAddAdmin() throws Exception {
+        Admin admin = new Admin("1", "Rish", "1234", "Admin", "rishabh@gmail.com");
+        String adminJson = objectMapper.writeValueAsString(admin);
+
+        mockMvc.perform(post("/admin/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(adminJson))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Admin Added Successfully"));
+
+        verify(adminService, times(1)).addAdmin(any(Admin.class));
+    }
+
+    @Test
+    public void testAddAdmin_InvalidEmail() throws Exception {
+        Admin admin = new Admin("1", "Rish", "1234", "Admin", "invalid-email");
+        String adminJson = objectMapper.writeValueAsString(admin);
+
+        mockMvc.perform(post("/admin/add")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(adminJson))
+                .andExpect(status().isBadRequest()) // Expecting a 400 Bad Request for invalid email
+                .andExpect(content().string("Invalid email format"));
+
+        verify(adminService, times(0)).addAdmin(any(Admin.class)); // The service should not be called
+    }
+
+    @Test
+    public void testDeleteAdmin() throws Exception {
+        String adminId = "1";
+
+        mockMvc.perform(delete("/admin/delete/{id}", adminId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Admin Deleted Successfully"));
+
+        verify(adminService, times(1)).deleteAdmin(adminId);
+    }
+
+   
+    @Test
+    public void testUpdateAdmin() throws Exception {
+        Admin admin = new Admin("1", "UpdatedUser", "newPassword", "ROLE_ADMIN", "updated@example.com");
+        String adminJson = objectMapper.writeValueAsString(admin);
+
+        mockMvc.perform(put("/admin/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(adminJson))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Admin Details Updated Successfully"));
+
+        verify(adminService, times(1)).updateAdmin(any(Admin.class));
+    }
+
+    @Test
+    public void testUpdateAdmin_InvalidPassword() throws Exception {
+        Admin admin = new Admin("1", "UpdatedUser", "short", "ROLE_ADMIN", "updated@example.com"); // Invalid password
+        String adminJson = objectMapper.writeValueAsString(admin);
+
+        mockMvc.perform(put("/admin/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(adminJson))
+                .andExpect(status().isBadRequest()) // Assuming password validation requires minimum length
+                .andExpect(content().string("Password must be at least 8 characters long"));
+
+        verify(adminService, times(0)).updateAdmin(any(Admin.class)); // Should not proceed if validation fails
+    }
+
+    @Test
+    public void testGenerateReceipt() throws Exception {
+        Receipt receipt = new Receipt(1, 4000, "Premium Wash");
+        String receiptJson = objectMapper.writeValueAsString(receipt);
+
+        mockMvc.perform(post("/admin/createReceipt")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(receiptJson))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Receipt generated Successfully"));
+
+        verify(adminService, times(1)).generateReceipt(any(Receipt.class));
+    }
+
+    @Test
+    public void testGetReceiptById() throws Exception {
+        Receipt receipt = new Receipt(1, 4000, "Premium Wash");
+        when(adminService.getReceiptbyId(1)).thenReturn(receipt);
+
+        mockMvc.perform(get("/admin/getReceipt/{receiptId}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(receipt)));
+
+        verify(adminService, times(1)).getReceiptbyId(1);
+    }
+
+   
+
+    // Test cases for updating an existing customer
+    @Test
+    public void testUpdateExistingCustomer() throws Exception {
+        CustomerDetails customer = new CustomerDetails("1", "john@example.com", "John", "1234567890");
+        String customerJson = objectMapper.writeValueAsString(customer);
+
+        mockMvc.perform(put("/admin/updateCustomer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(customerJson))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Customer Details Updated Successfully"));
+
+        verify(adminService, times(1)).updateExistingCustomer(any(CustomerDetails.class));
+    }
+
+    @Test
+    public void testUpdateExistingCustomer_InvalidEmail() throws Exception {
+        CustomerDetails customer = new CustomerDetails("1", "invalid-email", "John", "1234567890");
+        String customerJson = objectMapper.writeValueAsString(customer);
+
+        mockMvc.perform(put("/admin/updateCustomer")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(customerJson))
+                .andExpect(status().isBadRequest()) // Assuming email validation
+                .andExpect(content().string("Invalid email format"));
+
+        verify(adminService, times(0)).updateExistingCustomer(any(CustomerDetails.class)); // Should not proceed on invalid data
+    }
+}
+

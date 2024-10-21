@@ -1,0 +1,9 @@
+package com.customer.exception;
+
+public class NoSuchWasherException extends RuntimeException{
+	
+	public NoSuchWasherException(String message) {
+		super(message);
+	}
+
+}

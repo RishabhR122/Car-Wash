@@ -1,0 +1,54 @@
+package com.Admin.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.Admin.model.Admin;
+import com.Admin.model.WasherProfile;
+import com.Admin.service.WasherServiceImpl;
+
+import jakarta.validation.Valid;
+
+public class WasherController {
+	
+	@Autowired
+	WasherServiceImpl washerService;
+	
+	@GetMapping("/all")
+	public List<WasherProfile> findAllAdmins() {
+		return washerService.getAllWasher();
+	}
+	
+	@GetMapping("/{id}")
+	public Admin findAdminById(@PathVariable String id) {
+		return adminService.findAdminById(id);
+	}
+	
+	// add details of a new customer 
+	@PostMapping("/add")
+	public String addAdmin(@Valid @RequestBody Admin admin) {
+		adminService.addAdmin(admin);
+		return "Admin Added Successfully";
+	}
+	
+
+	@DeleteMapping("/delete/{id}")
+	public String deleteAdmin(@PathVariable String id) {
+		adminService.deleteAdmin(id);
+		return "Admin Deleted Successfully";
+    }
+	// update details of a existing customer 
+	@PutMapping("/update")
+	public String updateAdmin(@Valid @RequestBody Admin admin) {
+		adminService.updateAdmin(admin);
+		return "Admin Details Updated Successfully";
+	}
+
+}

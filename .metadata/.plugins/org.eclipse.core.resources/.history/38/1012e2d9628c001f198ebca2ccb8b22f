@@ -1,0 +1,11 @@
+package com.customer.service;
+
+import java.util.List;
+
+import com.customer.model.Ratings;
+
+public interface RatingService {
+	
+	 public List<Ratings> getallRatings();
+
+}
